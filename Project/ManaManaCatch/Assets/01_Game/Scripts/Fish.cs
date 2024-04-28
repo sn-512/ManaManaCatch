@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Fish : MonoBehaviour
 {
-    [SerializeField] private HitBox m_hitbox;
     [SerializeField] private float m_timing = 3f;
+    /// <summary>
+    /// タイミングとの差が＋ーinterval秒なら成功
+    /// </summary>
+    [SerializeField] private float m_interval = 0.3f;
+
     [SerializeField] private float m_elapsedTime = 0f;
-    [SerializeField] private bool m_isStart = false;
-    [SerializeField] private float m_interval = 0.1f;
 
     private Transform m_tf = null;
     private Vector3 m_startPos = Vector3.zero;
@@ -19,18 +21,18 @@ public class Fish : MonoBehaviour
     {
         m_tf = transform;
         m_startPos = m_tf.position;
-        //m_endPos = m_hitbox.transform.position;
         m_endPos = FishManager.GetFishMoveEndPos();
-
+        m_interval = 0.3f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        m_elapsedTime += Time.deltaTime;
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
 
-            if (EvaluateTiming(m_elapsedTime, m_timing))
+            if (EvaluateTiming())
             {
                 Debug.Log("Hit");
             }
@@ -39,16 +41,24 @@ public class Fish : MonoBehaviour
                 Debug.Log("Miss");
             }
         }
-        Debug.Log(CanScoop());
-        //経過時間+判定
-        if (m_elapsedTime > m_timing + m_interval)
-        {
 
+        if (!CanScoop())
+        {
+            if (EvaluateTiming())
+            {
+                Debug.Log("A");
+            }
         }
-        //スタートフラグをtrueにしないと移動、経過時間の計測をしない
+
+
+        //経過時間+判定　削除処理
+        if (IsIgnore())
+        {
+            Destroy(this.gameObject);
+        }
+        //スタートフラグをtrueにしないと移動、経過時間の計測をしない(デバッグ用)
         //if (m_isStart)
         {
-            m_elapsedTime += Time.deltaTime;
             var posY = m_tf.position.y;
             var pos = Vector3.LerpUnclamped(m_startPos, m_endPos, m_elapsedTime / m_timing);
             pos.y = posY;
@@ -58,16 +68,33 @@ public class Fish : MonoBehaviour
     /// <summary>
     /// タイミングの評価
     /// </summary>
-    /// <param 経過時間="elapsedTime"></param>
-    /// <param タイミング="timing"></param>
     /// <returns>経過時間とタイミングの差がm_interval以内であればtrue</returns>
-    private bool EvaluateTiming(float elapsedTime, float timing)
+    public bool EvaluateTiming()
     {
-        return Mathf.Abs(elapsedTime - timing) <= m_interval;
-
+        return Mathf.Abs(DiffElapsedTimeAndTiming()) <= m_interval;
     }
+    /// <summary>
+    /// タイミングの評価を行うか判定する
+    /// </summary>
+    /// <returns>経過時間とタイミングの差がm_canScoopTime以内であればtrue</returns>
     public bool CanScoop()
     {
-        return Mathf.Abs(m_elapsedTime - m_timing) <= m_canScoopTime;
+        return Mathf.Abs(DiffElapsedTimeAndTiming()) <= m_canScoopTime;
+    }
+    /// <summary>
+    /// 無視する(削除フラグとして使用)
+    /// </summary>
+    /// <returns>経過時間+判定間隔がタイミングを超えるとtrue</returns>
+    public bool IsIgnore()
+    {
+        return (m_elapsedTime + m_interval) >= m_timing;
+    }
+    /// <summary>
+    ///　タイミングとの差
+    /// </summary>
+    /// <returns>経過時間とタイミングとの差</returns>
+    public float DiffElapsedTimeAndTiming()
+    {
+        return m_elapsedTime - m_timing;
     }
 }

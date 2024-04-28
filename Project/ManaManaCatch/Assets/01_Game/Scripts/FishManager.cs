@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FishManager : MonoBehaviour
@@ -35,7 +36,27 @@ public class FishManager : MonoBehaviour
     }
     // レーンデータのリスト
     private List<LaneData> m_laneData = new List<LaneData>();
-
+    enum ePlayerType
+    {
+        Player1,
+        Player2,
+        Player3,
+        Player4,
+    }
+    /// <summary>
+    /// インデックスに応じてキーコードを返す
+    /// </summary>
+    /// <param name="num">インデックス</param>
+    /// <returns></returns>
+    /// <exception cref="System.InvalidOperationException"></exception>
+    private KeyCode GetKeyBind(int num) => num switch
+    {
+        (int)ePlayerType.Player1 => KeyCode.Alpha1,
+        (int)ePlayerType.Player2 => KeyCode.Alpha2,
+        (int)ePlayerType.Player3 => KeyCode.Alpha3,
+        (int)ePlayerType.Player4 => KeyCode.Alpha4,
+        _ => throw new System.InvalidOperationException()
+    };
     private void Awake()
     {
         ms_instance = this;
@@ -92,7 +113,43 @@ public class FishManager : MonoBehaviour
             lane.nextTime -= Time.deltaTime;
         }
     }
+    void Hoge(int i)
+    {
+        //if (Input.GetKeyDown(GetKeyBind(i)))
+        {
+            float Min = float.MaxValue;
+            Fish result = null;
+            foreach (Fish fish in m_laneData[i].fishes)
+            {
+                if (!fish.CanScoop()) continue;
 
+                if (fish.EvaluateTiming() == true)
+                {
+                    if (Min > fish.DiffElapsedTimeAndTiming())
+                    {
+                        Min = fish.DiffElapsedTimeAndTiming();
+                        result = fish;
+                    }
+                }
+                if (result != null) Debug.Log(Min);
+            }
+
+        }
+    }
+    private void RemoveFish(int i)
+    {
+        List<Fish> fishList = m_laneData[i].fishes;
+        if (fishList.Count <= 0) return;
+        foreach (Fish fish in fishList)
+        {
+            if (fish.IsIgnore())
+            {
+                m_laneData[i].fishes.Remove(fish);
+            }
+
+            if (fishList.Count >= 0) break;
+        }
+    }
     private void Update()
     {
         for (int i = 0; i < LANE_COUNT; i++)
@@ -101,6 +158,9 @@ public class FishManager : MonoBehaviour
 
             // ランダムで漂流物を生成するテスト処理（削除予定）
             UpdateRandomTest(lane);
+
+            RemoveFish(i);
+            Hoge(i);
         }
     }
 }
