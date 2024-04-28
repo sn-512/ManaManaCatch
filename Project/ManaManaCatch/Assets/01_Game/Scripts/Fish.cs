@@ -62,7 +62,7 @@ public class Fish : MonoBehaviour
         return Mathf.Abs(elapsedTime - timing) <= m_interval;
 
     }
-    public] bool CanScoop()
+    public bool CanScoop()
     {
         return Mathf.Abs(m_elapsedTime - m_timing) <= m_canScoopTime;
     }

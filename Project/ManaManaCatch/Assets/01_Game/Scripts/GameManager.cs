@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    //enum 
+    enum PlayerType
+    {
+        Player1,
+        Player2,
+        Player3,
+        Player4,
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,4 +23,5 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
 }
