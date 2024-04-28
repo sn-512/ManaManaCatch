@@ -19,7 +19,8 @@ public class Fish : MonoBehaviour
     {
         m_tf = transform;
         m_startPos = m_tf.position;
-        m_endPos = m_hitbox.transform.position;
+        //m_endPos = m_hitbox.transform.position;
+        m_endPos = FishManager.GetFishMoveEndPos();
 
     }
 
@@ -45,10 +46,13 @@ public class Fish : MonoBehaviour
 
         }
         //スタートフラグをtrueにしないと移動、経過時間の計測をしない
-        if (m_isStart)
+        //if (m_isStart)
         {
             m_elapsedTime += Time.deltaTime;
-            m_tf.position = Vector3.LerpUnclamped(m_startPos, m_endPos, m_elapsedTime / m_timing);
+            var posY = m_tf.position.y;
+            var pos = Vector3.LerpUnclamped(m_startPos, m_endPos, m_elapsedTime / m_timing);
+            pos.y = posY;
+            transform.position = pos;
         }
     }
     /// <summary>

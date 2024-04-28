@@ -44,6 +44,12 @@ TagManager:
   - name: Field
     uniqueID: 2045068193
     locked: 0
+  - name: Fish
+    uniqueID: 3011395017
+    locked: 0
+  - name: Bridge
+    uniqueID: 2395864567
+    locked: 0
   - name: Character
     uniqueID: 3710383035
     locked: 0
