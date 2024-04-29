@@ -214,11 +214,7 @@ public class FishManager : MonoBehaviour
     /// </summary>
     void Hoge(int i)
     {
-        ////‹óU‚è
-        //if ()
-        //{
-
-        //}
+        if (m_laneData[i].fishes.Count <= 0) return;
         //ƒ‚[ƒVƒ‡ƒ“’†
         if (!PlayerManager.instance.CanScoop(i))
         {
@@ -232,8 +228,7 @@ public class FishManager : MonoBehaviour
             {
                 PlayerManager.instance.PlayAnim(i, true, m_laneData[i].tableList[0].type == eFishType.Fish, m_laneData[i].tableList[0].type == eFishType.Bomb);
 
-
-
+                m_laneData[i].fishes[0].Destroy();
                 m_laneData[i].tableList.RemoveAt(0);
                 m_laneData[i].fishes.RemoveAt(0);
 

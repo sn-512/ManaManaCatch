@@ -18,6 +18,8 @@ public class Fish : MonoBehaviour
     private float m_canScoopTime = 1f;
 
     private SpriteRenderer spriteRenderer;
+
+    public bool m_destroy = false;
     // Start is called before the first frame update
     void Awake()
     {
@@ -67,8 +69,7 @@ public class Fish : MonoBehaviour
         //経過時間+判定　削除処理
         if (IsOutOfView())
         {
-            Destroy(this.gameObject);
-            //FishManager.
+            Destroy();
         }
         //スタートフラグをtrueにしないと移動、経過時間の計測をしない(デバッグ用)
         //if (m_isStart)
@@ -103,6 +104,10 @@ public class Fish : MonoBehaviour
     {
         return (m_elapsedTime) >= m_timing + m_interval;
     }
+    /// <summary>
+    /// 画面外へ行ったかをざっくりと判定
+    /// </summary>
+    /// <returns></returns>
     public bool IsOutOfView()
     {
         return m_elapsedTime >= m_timing + 2f;
@@ -114,5 +119,12 @@ public class Fish : MonoBehaviour
     public float DiffElapsedTimeAndTiming()
     {
         return m_elapsedTime - m_timing;
+    }
+    /// <summary>
+    /// Destroyをクラス外から呼ぶ
+    /// </summary>
+    public void Destroy()
+    {
+        Destroy(this.gameObject);
     }
 }
