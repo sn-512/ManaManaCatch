@@ -6,6 +6,7 @@ using UnityEngine;
 public class FishManager : MonoBehaviour
 {
     private static FishManager ms_instance = null;
+    public static FishManager instance { get { return ms_instance; } }
 
     // レーンの数
     public static readonly int LANE_COUNT = 4;
@@ -74,19 +75,47 @@ public class FishManager : MonoBehaviour
         (int)ePlayerType.Player4 => KeyCode.Alpha4,
         _ => throw new System.InvalidOperationException()
     };
+
+
+    private int m_scoreMax = 0;
+    public int scoreMax { get { return m_scoreMax; } }
+
+    public bool isEnd
+    {
+        get
+        {
+            for (int i = 0; i < LANE_COUNT; i++)
+            {
+                var lane = m_laneData[i];
+                if (lane.tableList.Count > 0) return false;
+            }
+
+            return true;
+        }
+    }
+
     private void Awake()
     {
         ms_instance = this;
+
+        int fish = 30;
+        int trash = 10;
+        int bomb = 5;
+        m_scoreMax = fish;
+
 
         // レーンの数だけレーンデータをリストに追加
         for (int i = 0; i < LANE_COUNT; i++)
         {
             var lane = new LaneData();
             lane.laneTf = m_laneTfs[i];
-            TableSetup(lane.tableList, 100, 60, 30);
+            TableSetup(lane.tableList, fish, trash, bomb);
             m_laneData.Add(lane);
         }
     }
+
+
+
     private void Start()
     {
         GameStart();
@@ -224,12 +253,20 @@ public class FishManager : MonoBehaviour
         if (Input.GetKeyDown(GetKeyBind(i)))
         {
             //
-            if (m_laneData[i].fishes[0].EvaluateTiming() && m_laneData[i].fishes[0].CanScoop())
+            if (m_laneData[i].fishes[0].CanScoop())
             {
-                PlayerManager.instance.PlayAnim(i, true, m_laneData[i].tableList[0].type == eFishType.Fish, m_laneData[i].tableList[0].type == eFishType.Bomb);
+                var success = m_laneData[i].fishes[0].EvaluateTiming();
+                var type = m_laneData[i].fishes[0].fishType;
+                if (type == 0)
+                {
+                    PlayerManager.instance.PlayAnim(i, true, success);
+                }
+                else
+                {
+                    PlayerManager.instance.PlayAnim(i, true, false);
+                }
 
                 m_laneData[i].fishes[0].Destroy();
-                m_laneData[i].tableList.RemoveAt(0);
                 m_laneData[i].fishes.RemoveAt(0);
 
             }
@@ -293,16 +330,18 @@ public class FishManager : MonoBehaviour
         for (int i = 0; i < LANE_COUNT; i++)
         {
             var lane = m_laneData[i];
-            if (lane.tableList.Count <= 0) continue;
-
-            if (lane.tableList[0].time <= m_gameTime)
+            if (lane.tableList.Count > 0)
             {
-                Fish fish = SpawnFish(lane.tableList[0].type, i);
+                if (lane.tableList[0].time <= m_gameTime)
+                {
+                    Fish fish = SpawnFish(lane.tableList[0].type, i);
 
-                lane.fishes.Add(fish);
+                    lane.fishes.Add(fish);
 
-                lane.tableList.RemoveAt(0);
+                    lane.tableList.RemoveAt(0);
+                }
             }
+
             RemoveFish(i);
             Hoge(i);
             // ランダムで漂流物を生成するテスト処理（削除予定）

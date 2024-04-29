@@ -61,6 +61,11 @@ public class Player : MonoBehaviour
         m_animIndex = 0;
         m_animType = type;
         Apply();
+
+        if (m_animType == AnimType.Scoop)
+        {
+            SoundManager.instance.PlaySE(m_no);
+        }
     }
 
     public void PlayCatchAnim(bool success)
@@ -69,13 +74,21 @@ public class Player : MonoBehaviour
         if (success)
         {
             ChangeAnim(AnimType.Catch);
-            LaneManager.instance.AddPoint(m_no, 5);
+            LaneManager.instance.AddPoint(m_no, 1);
+            SoundManager.instance.PlaySE(m_no);
         }
         else
         {
             ChangeAnim(AnimType.Failed);
-            LaneManager.instance.AddPoint(m_no, -5);
+            LaneManager.instance.AddPoint(m_no, -1);
+            SoundManager.instance.PlaySE(m_no);
         }
+    }
+
+    private IEnumerator Co_PlaySE(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SoundManager.instance.PlaySE(m_no);
     }
 
     public void PlayScoopAnim()
@@ -86,6 +99,7 @@ public class Player : MonoBehaviour
 
     public void PlayBombAnim()
     {
+        if (isPlaying) return;
     }
 
     private AnimData GetAnimData()

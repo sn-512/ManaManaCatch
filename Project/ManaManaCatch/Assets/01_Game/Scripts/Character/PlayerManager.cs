@@ -45,25 +45,25 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if (Input.GetKey(KeyCode.Space)) PlayAnim(0, true, Random.Range(0, 2) == 0);
-            else PlayAnim(0, false);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (Input.GetKey(KeyCode.Space)) PlayAnim(1, true, Random.Range(0, 2) == 0);
-            else PlayAnim(1, false);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if (Input.GetKey(KeyCode.Space)) PlayAnim(2, true, Random.Range(0, 2) == 0);
-            else PlayAnim(2, false);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            if (Input.GetKey(KeyCode.Space)) PlayAnim(3, true, Random.Range(0, 2) == 0);
-            else PlayAnim(3, false);
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    if (Input.GetKey(KeyCode.Space)) PlayAnim(0, true, Random.Range(0, 2) == 0);
+        //    else PlayAnim(0, false);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    if (Input.GetKey(KeyCode.Space)) PlayAnim(1, true, Random.Range(0, 2) == 0);
+        //    else PlayAnim(1, false);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    if (Input.GetKey(KeyCode.Space)) PlayAnim(2, true, Random.Range(0, 2) == 0);
+        //    else PlayAnim(2, false);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.Alpha4))
+        //{
+        //    if (Input.GetKey(KeyCode.Space)) PlayAnim(3, true, Random.Range(0, 2) == 0);
+        //    else PlayAnim(3, false);
+        //}
     }
 }

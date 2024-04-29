@@ -6,17 +6,28 @@ public class ScaleOnPoint_2p : MonoBehaviour
     public float maxHeight = 5.0f; // Yé≤ÇÃç≈ëÂÇÃëÂÇ´Ç≥
     public float lastpoint_2p;
     public float point_2p = 0;
-    
-    
-    
+
+    private int scorePoint = 0;
+    private int scoreMax = 0;
+
+    private void Awake()
+    {
+        scorePoint = GameData.scoreList[1];
+
+        scoreMax = GameData.scoreMax;
+    }
+
+
+
+
 
     void Update()
     {
-        if (point_2p < 23)
+        if (point_2p < scorePoint)
         {
             point_2p += 0.007f;
         }
-        lastpoint_2p = point_2p / 50;
+        lastpoint_2p = point_2p / scoreMax;
         
         // Yé≤ÇÃëÂÇ´Ç≥ÇåvéZÇ∑ÇÈ
         float scaleY = Mathf.Lerp(minHeight, maxHeight, lastpoint_2p);

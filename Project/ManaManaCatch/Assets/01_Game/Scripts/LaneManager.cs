@@ -89,4 +89,10 @@ public class LaneManager : MonoBehaviour
         if (!(0 <= no && no < m_laneData.Count)) return 0f;
         return m_laneData[no].laneTF.position.y;
     }
+
+    public int GetLaneScore(int no)
+    {
+        if (!(0 <= no && no < m_laneData.Count)) return 0;
+        return m_laneData[no].point;
+    }
 }

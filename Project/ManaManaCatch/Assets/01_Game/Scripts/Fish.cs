@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Fish : MonoBehaviour
 {
+    [SerializeField] private int m_type = 0;
+    public int fishType { get { return m_type; } }
+
     [SerializeField] private float m_timing = 3f;
     /// <summary>
     /// タイミングとの差が＋ーinterval秒なら成功

@@ -6,15 +6,25 @@ public class ScaleOnPoint_1p : MonoBehaviour
     public float maxHeight = 5.0f; // Yé≤ÇÃç≈ëÂÇÃëÂÇ´Ç≥
     public float lastpoint_1p;
     public float point_1p = 40;
-    
+
+    private int scorePoint = 0;
+    private int scoreMax = 0;
+
+    private void Awake()
+    {
+        scorePoint = GameData.scoreList[0];
+
+        scoreMax = GameData.scoreMax;
+    }
+
 
     void Update()
     {
-        if (point_1p < 11)
+        if (point_1p < scorePoint)
         {
             point_1p += 0.007f;
         }
-        lastpoint_1p = point_1p / 50;
+        lastpoint_1p = point_1p / scoreMax;
         
         
         // Yé≤ÇÃëÂÇ´Ç≥ÇåvéZÇ∑ÇÈ

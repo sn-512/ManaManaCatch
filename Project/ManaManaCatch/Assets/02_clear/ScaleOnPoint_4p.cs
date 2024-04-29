@@ -6,16 +6,25 @@ public class ScaleOnPoint_4p : MonoBehaviour
     public float maxHeight = 5.0f; // Yé≤ÇÃç≈ëÂÇÃëÂÇ´Ç≥
     public float lastpoint_4p;
     public float point_4p = 40;
-    
+
+    private int scorePoint = 0;
+    private int scoreMax = 0;
+
+    private void Awake()
+    {
+        scorePoint = GameData.scoreList[3];
+
+        scoreMax = GameData.scoreMax;
+    }
+
 
     void Update()
     {
-        if (point_4p < 15)
+        if (point_4p < scorePoint)
         {
             point_4p += 0.007f;
         }
-        lastpoint_4p = point_4p / 50;
-        lastpoint_4p = point_4p / 50;
+        lastpoint_4p = point_4p / scoreMax;
         
         // Yé≤ÇÃëÂÇ´Ç≥ÇåvéZÇ∑ÇÈ
         float scaleY = Mathf.Lerp(minHeight, maxHeight, lastpoint_4p);

@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        GameStart();
     }
 
     // Update is called once per frame
@@ -47,5 +47,36 @@ public class GameManager : MonoBehaviour
     private void Hoge(ePlayerType type)
     {
 
+    }
+
+    public void GameStart()
+    {
+        StartCoroutine(Co_GameStart());
+    }
+
+    private IEnumerator Co_GameStart()
+    {
+        yield return new WaitForSeconds(1f);
+
+        SoundManager.instance.PlayBGM();
+
+        while (!FishManager.instance.isEnd)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(3f);
+
+        GameEnd();
+    }
+
+    public void GameEnd()
+    {
+        GameData.scoreMax = FishManager.instance.scoreMax;
+        for (int i = 0; i < 4; i++)
+        {
+            GameData.scoreList[i] = LaneManager.instance.GetLaneScore(i);
+        }
+        SceneManager.LoadScene("clear");
     }
 }
