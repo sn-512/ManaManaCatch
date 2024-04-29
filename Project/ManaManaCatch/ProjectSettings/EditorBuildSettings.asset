@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/00_Title/rodo.unity
+    guid: cc17cba9a60eaee40816ebff0a2d102e
+  - enabled: 1
+    path: Assets/00_Title/Title.unity
+    guid: 0a3041b3c1962934b9821da07da9cad4
   m_configObjects: {}
