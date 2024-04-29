@@ -10,7 +10,7 @@ public class ScaleOnPoint_3p : MonoBehaviour
 
     void Update()
     {
-        if (point_3p < 32)
+        if (point_3p < 41)
         {
             point_3p += 0.007f;
         }

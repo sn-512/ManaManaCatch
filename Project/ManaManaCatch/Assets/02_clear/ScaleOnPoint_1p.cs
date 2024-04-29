@@ -10,7 +10,7 @@ public class ScaleOnPoint_1p : MonoBehaviour
 
     void Update()
     {
-        if (point_1p < 41)
+        if (point_1p < 11)
         {
             point_1p += 0.007f;
         }

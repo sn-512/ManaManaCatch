@@ -10,7 +10,7 @@ public class ScaleOnPoint_4p : MonoBehaviour
 
     void Update()
     {
-        if (point_4p < 20)
+        if (point_4p < 15)
         {
             point_4p += 0.007f;
         }
