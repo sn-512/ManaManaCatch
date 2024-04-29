@@ -221,7 +221,7 @@ public class FishManager : MonoBehaviour
             return;
         }
         //
-        //if (Input.GetKeyDown(GetKeyBind(i)))
+        if (Input.GetKeyDown(GetKeyBind(i)))
         {
             //
             if (m_laneData[i].fishes[0].EvaluateTiming() && m_laneData[i].fishes[0].CanScoop())
