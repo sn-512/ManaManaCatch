@@ -107,6 +107,8 @@ public class FishManager : MonoBehaviour
         for (int i = 0; i < x; i++)
         {
             eFishTypes.Clear();
+            ratioList.Clear();
+
             int randNum = 0;
             if (fishQuantity > 0)
             {
@@ -140,6 +142,10 @@ public class FishManager : MonoBehaviour
                     if (tableData.type == eFishType.Trash) trashQuantity--;
                     if (tableData.type == eFishType.Bomb) bombQuantity--;
                     break;
+                }
+                else
+                {
+                    rand -= ratioList[j];
                 }
             }
 
