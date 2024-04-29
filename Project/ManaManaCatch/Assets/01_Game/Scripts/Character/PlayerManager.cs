@@ -12,6 +12,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
+        ms_instance = this;
     }
 
     public void PlayAnim(int no, bool scoop, bool success = false, bool bomb = false)

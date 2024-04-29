@@ -214,45 +214,52 @@ public class FishManager : MonoBehaviour
     /// </summary>
     void Hoge(int i)
     {
-        if (Input.GetKeyDown(GetKeyBind(i)))
+        ////空振り
+        //if ()
+        //{
+
+        //}
+        //モーション中
+        if (!PlayerManager.instance.CanScoop(i))
         {
-            float Min = float.MaxValue;
-            Fish result = null;
-            foreach (Fish fish in m_laneData[i].fishes)
-            {
-                if (!fish.CanScoop()) continue;
-
-                if (fish.EvaluateTiming() == true)
-                {
-                    if (Min > fish.DiffElapsedTimeAndTiming())
-                    {
-                        Min = fish.DiffElapsedTimeAndTiming();
-                        result = fish;
-                    }
-                }
-                if (result != null) Debug.Log(Min);
-            }
-
+            return;
         }
+        //
+        //if (Input.GetKeyDown(GetKeyBind(i)))
+        {
+            //
+            if (m_laneData[i].fishes[0].EvaluateTiming() && m_laneData[i].fishes[0].CanScoop())
+            {
+                PlayerManager.instance.PlayAnim(i, true, m_laneData[i].tableList[0].type == eFishType.Fish, m_laneData[i].tableList[0].type == eFishType.Bomb);
+
+
+
+                m_laneData[i].tableList.RemoveAt(0);
+                m_laneData[i].fishes.RemoveAt(0);
+
+            }
+            else
+            {
+                PlayerManager.instance.PlayAnim(i, false, false, false);
+            }
+        }
+
+
+
     }
     private void RemoveFish(int i)
     {
-        //List<Fish> fishList = m_laneData[i].fishes;
-        //if (fishList.Count <= 0) return;
-        //foreach (Fish fish in fishList)
-        //{
-        //    if (fish.IsIgnore())
-        //    {
-        //        m_laneData[i].fishes.Remove(fish);
-        //    }
-
-        //    if (fishList.Count >= 0) break;
-        //}
-
-        m_laneData[i].fishes.RemoveAt(0);
+        if (m_laneData[i].fishes.Count <= 0) return;
+        Fish fish = m_laneData[i].fishes[0];
+        if (fish.IsIgnore())
+        {
+            m_laneData[i].fishes.Remove(fish);
+        }  
+            
+        
     }
 
-    private Fish SpawnFish(eFishType fishType , int index)
+    private Fish SpawnFish(eFishType fishType, int index)
     {
         GameObject prefab = null;
 
@@ -301,7 +308,8 @@ public class FishManager : MonoBehaviour
 
                 lane.tableList.RemoveAt(0);
             }
-
+            RemoveFish(i);
+            Hoge(i);
             // ランダムで漂流物を生成するテスト処理（削除予定）
             //UpdateRandomTest(lane);
 

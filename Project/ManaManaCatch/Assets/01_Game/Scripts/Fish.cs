@@ -24,7 +24,7 @@ public class Fish : MonoBehaviour
         m_tf = transform;
         m_startPos = m_tf.position;
         m_endPos = FishManager.GetFishMoveEndPos();
-        m_interval = 0.1f;
+        m_interval = 0.3f;
 
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
@@ -33,18 +33,18 @@ public class Fish : MonoBehaviour
     void Update()
     {
         m_elapsedTime += Time.deltaTime;
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
 
-            if (EvaluateTiming())
-            {
-                Debug.Log("Hit");
-            }
-            else
-            {
-                Debug.Log("Miss");
-            }
-        }
+        //    if (EvaluateTiming())
+        //    {
+        //       Debug.Log("Hit");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("Miss");
+        //    }
+        //}
 
         if (CanScoop())
         {
@@ -58,12 +58,17 @@ public class Fish : MonoBehaviour
             //    Debug.Log("A");
             //}
         }
+        else
+        {
+            spriteRenderer.color = Color.white;
+        }
 
 
         //経過時間+判定　削除処理
-        if (IsIgnore())
+        if (IsOutOfView())
         {
             Destroy(this.gameObject);
+            //FishManager.
         }
         //スタートフラグをtrueにしないと移動、経過時間の計測をしない(デバッグ用)
         //if (m_isStart)
@@ -91,12 +96,16 @@ public class Fish : MonoBehaviour
         return Mathf.Abs(m_elapsedTime - m_timing) <= m_canScoopTime;
     }
     /// <summary>
-    /// 無視する(削除フラグとして使用)
+    /// ボタンを押しても無視する
     /// </summary>
-    /// <returns>経過時間+判定間隔がタイミングを超えるとtrue</returns>
+    /// <returns>経過時間がタイミング+判定間隔を超えるとtrue</returns>
     public bool IsIgnore()
     {
-        return (m_elapsedTime - m_interval) >= m_timing;
+        return (m_elapsedTime) >= m_timing + m_interval;
+    }
+    public bool IsOutOfView()
+    {
+        return m_elapsedTime >= m_timing + 2f;
     }
     /// <summary>
     ///　タイミングとの差
