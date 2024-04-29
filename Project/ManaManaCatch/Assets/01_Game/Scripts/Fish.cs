@@ -22,7 +22,7 @@ public class Fish : MonoBehaviour
         m_tf = transform;
         m_startPos = m_tf.position;
         m_endPos = FishManager.GetFishMoveEndPos();
-        m_interval = 0.3f;
+        m_interval = 0.1f;
     }
 
     // Update is called once per frame

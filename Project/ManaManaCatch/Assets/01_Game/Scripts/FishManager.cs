@@ -33,6 +33,8 @@ public class FishManager : MonoBehaviour
         public List<Fish> fishes = new List<Fish>();
         // 次に漂流物を生成するまでの時間（テスト用なので削除予定）
         public float nextTime = 0f;
+        //発生させる魚のカウンター
+        public int fishQuantity = 10;
     }
     // レーンデータのリスト
     private List<LaneData> m_laneData = new List<LaneData>();
@@ -113,6 +115,69 @@ public class FishManager : MonoBehaviour
             lane.nextTime -= Time.deltaTime;
         }
     }
+    /// <summary>
+    /// laneDataのfishQuantityで魚の発生を制限
+    /// </summary>
+    private void FishSpawner(LaneData lane)
+    {
+        if (lane.nextTime <= 0f)
+        {
+            GameObject prefab = null;
+
+            // ランダムで漂流物を生成する
+            int rand = Random.Range(0, 100);
+            // 70%かつfishQuantityが1以上なら魚
+            if (rand < 70 && lane.fishQuantity > 0)
+            {
+                prefab = m_fishPrefabs[Random.Range(0, m_fishPrefabs.Count)];
+                lane.fishQuantity--;
+                Debug.Log(lane.fishQuantity);
+            }
+            // 20%でゴミ
+            else if (rand < 20) prefab = m_trashPrefabs[Random.Range(0, m_trashPrefabs.Count)];
+            // 10%で爆弾
+            else prefab = m_bombPrefabs[Random.Range(0, m_bombPrefabs.Count)];
+
+            // 漂流物のプレハブをオブジェクト化
+            GameObject obj = Instantiate(prefab);
+
+            // 生成した漂流物の高さをレーンに合わせる
+            var pos = obj.transform.position;
+            pos.y = lane.laneTf.position.y;
+            obj.transform.position = pos;
+
+            // 生成したFishクラスを各レーンのリストに追加
+            Fish fish = obj.GetComponent<Fish>();
+            lane.fishes.Add(fish);
+
+            // 次に生成する時間をランダムで設定
+            lane.nextTime += Random.Range(3f, 5f);
+        }
+        else
+        {
+            lane.nextTime -= Time.deltaTime;
+        }
+    }
+    /// <summary>
+    /// 全てのレーンの魚の残量を監視
+    /// </summary>
+    /// <returns>全てのレーンで1つも魚がなければtrue 全てのレーンで1つでも魚が1以上あればfalse</returns>
+    private bool IsNotEnptyFishQuantity()
+    {
+        bool isEnptyFish = true;
+        for (int i = 0; i < LANE_COUNT; i++)
+        {
+            if (m_laneData[i].fishQuantity > 0)
+            {
+                isEnptyFish = false;
+            }
+        }
+        return isEnptyFish;
+    }
+    /// <summary>
+    /// 入力の受け付けとFishとの判定
+    /// まだ未完成
+    /// </summary>
     void Hoge(int i)
     {
         //if (Input.GetKeyDown(GetKeyBind(i)))
@@ -157,7 +222,9 @@ public class FishManager : MonoBehaviour
             var lane = m_laneData[i];
 
             // ランダムで漂流物を生成するテスト処理（削除予定）
-            UpdateRandomTest(lane);
+            //UpdateRandomTest(lane);
+
+            FishSpawner(lane);
 
             RemoveFish(i);
             Hoge(i);
