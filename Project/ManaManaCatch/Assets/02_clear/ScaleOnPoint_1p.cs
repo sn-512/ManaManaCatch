@@ -15,7 +15,7 @@ public class ScaleOnPoint_1p : MonoBehaviour
             point_1p += 0.007f;
         }
         lastpoint_1p = point_1p / 50;
-        lastpoint_1p = point_1p / 50;
+        
         
         // YŽ²‚Ì‘å‚«‚³‚ðŒvŽZ‚·‚é
         float scaleY = Mathf.Lerp(minHeight, maxHeight, lastpoint_1p);

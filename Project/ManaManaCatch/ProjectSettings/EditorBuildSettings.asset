@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01_Game/Field.unity
     guid: a3d3fbb5e1277ca40a6dedcc04b540ef
+  - enabled: 1
+    path: Assets/02_clear/clear.unity
+    guid: 9846f3c656a845e45b855ce2e23a0e0b
   m_configObjects: {}

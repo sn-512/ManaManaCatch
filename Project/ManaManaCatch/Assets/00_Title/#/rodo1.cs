@@ -34,6 +34,6 @@ public class rodo1 : MonoBehaviour
         }
 
         fadePanel.color = endColor;  // フェードが完了したら最終色に設定
-        SceneManager.LoadScene("Field"); // シーンをロードしてメニューシーンに遷移
+        SceneManager.LoadScene("Game"); // シーンをロードしてメニューシーンに遷移
     }
 }
