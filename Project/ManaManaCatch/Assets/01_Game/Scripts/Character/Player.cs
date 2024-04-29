@@ -84,6 +84,10 @@ public class Player : MonoBehaviour
         ChangeAnim(AnimType.Scoop);
     }
 
+    public void PlayBombAnim()
+    {
+    }
+
     private AnimData GetAnimData()
     {
         switch (m_animType)
