@@ -73,7 +73,7 @@ public class PointUI : MonoBehaviour
 
         while (elapsed < time)
         {
-            var alpha = Easing.BackOut(elapsed, time, 0f, 1f, 10f);
+            var alpha = Easing.BackOut(elapsed, time, 0f, 1f, 5f);
             m_rt.localScale = Vector3.one * alpha;
             yield return null;
 

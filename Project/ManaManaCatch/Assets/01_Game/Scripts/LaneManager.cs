@@ -47,7 +47,7 @@ public class LaneManager : MonoBehaviour
             scale.y = m_laneWidth;
             lane.areaTF.localScale = scale;
 
-            lane.laneRT.anchoredPosition = new Vector2(0f, ((posY - m_laneWidth) / size) * height);
+            //lane.laneRT.anchoredPosition = new Vector2(0f, ((posY - m_laneWidth) / size) * height);
         }
     }
 

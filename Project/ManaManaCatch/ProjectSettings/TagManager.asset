@@ -59,3 +59,6 @@ TagManager:
   - name: Character
     uniqueID: 3710383035
     locked: 0
+  - name: Logo
+    uniqueID: 941628305
+    locked: 0
