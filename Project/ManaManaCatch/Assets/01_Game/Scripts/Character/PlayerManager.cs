@@ -12,7 +12,6 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
-        m_players = new List<Player>(GetComponentsInChildren<Player>());
     }
 
     public void PlayCatch(int no)

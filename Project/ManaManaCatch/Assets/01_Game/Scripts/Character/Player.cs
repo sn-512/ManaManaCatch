@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        m_rend = GetComponent<SpriteRenderer>();
+        m_rend = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void ChangeAnim(AnimType type)
@@ -69,10 +69,12 @@ public class Player : MonoBehaviour
         if (success)
         {
             ChangeAnim(AnimType.Catch);
+            LaneManager.instance.AddPoint(m_no, 5);
         }
         else
         {
             ChangeAnim(AnimType.Failed);
+            LaneManager.instance.AddPoint(m_no, -5);
         }
     }
 
