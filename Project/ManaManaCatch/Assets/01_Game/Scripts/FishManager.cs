@@ -10,10 +10,13 @@ public class FishManager : MonoBehaviour
     // レーンの数
     public static readonly int LANE_COUNT = 4;
 
+    private float m_gameTime = 0f;
+
+    private bool m_isStart = false;
+
     // レーンの位置判断用のTransformのリスト
     [SerializeField]
     private List<Transform> m_laneTfs = new List<Transform>();
-
     // 魚系のプレハブリスト
     [SerializeField]
     private List<GameObject> m_fishPrefabs = new List<GameObject>();
@@ -23,6 +26,18 @@ public class FishManager : MonoBehaviour
     // 爆弾系のプレハブリスト
     [SerializeField]
     private List<GameObject> m_bombPrefabs = new List<GameObject>();
+    enum eFishType
+    {
+        None,
+        Fish,
+        Trash,
+        Bomb
+    }
+    private class TableData
+    {
+        public eFishType type = eFishType.None;
+        public float time;
+    }
 
     // レーンのデータ
     private class LaneData
@@ -33,8 +48,8 @@ public class FishManager : MonoBehaviour
         public List<Fish> fishes = new List<Fish>();
         // 次に漂流物を生成するまでの時間（テスト用なので削除予定）
         public float nextTime = 0f;
-        //発生させる魚のカウンター
-        public int fishQuantity = 10;
+
+        public List<TableData> tableList = new List<TableData>();
     }
     // レーンデータのリスト
     private List<LaneData> m_laneData = new List<LaneData>();
@@ -68,10 +83,73 @@ public class FishManager : MonoBehaviour
         {
             var lane = new LaneData();
             lane.laneTf = m_laneTfs[i];
+            TableSetup(lane.tableList, 100, 60, 30);
             m_laneData.Add(lane);
         }
     }
+    private void Start()
+    {
+        GameStart();
+    }
+    public void GameStart()
+    {
+        m_isStart = true;
+        m_gameTime = 0f;
+    }
+    private void TableSetup(List<TableData> tableList, int fishQuantity, int trashQuantity, int bombQuantity)
+    {
+        int x = fishQuantity + trashQuantity + bombQuantity;
+        float time = 0f;
+        List<eFishType> eFishTypes = new List<eFishType>();
+        List<int> ratioList = new List<int>();
 
+
+        for (int i = 0; i < x; i++)
+        {
+            eFishTypes.Clear();
+            int randNum = 0;
+            if (fishQuantity > 0)
+            {
+                eFishTypes.Add(eFishType.Fish);
+                randNum += 70;
+                ratioList.Add(70);
+            }
+            if (trashQuantity > 0)
+            {
+                eFishTypes.Add(eFishType.Trash);
+                randNum += 20;
+                ratioList.Add(20);
+            }
+            if (bombQuantity > 0)
+            {
+                eFishTypes.Add(eFishType.Bomb);
+                randNum += 10;
+                ratioList.Add(10);
+            }
+
+
+            TableData tableData = new TableData();
+            // ランダムで漂流物を生成する
+            int rand = Random.Range(0, randNum);
+            for (int j = eFishTypes.Count - 1; j >= 0; j--)
+            {
+                if (rand < ratioList[j])
+                {
+                    tableData.type = eFishTypes[j];
+                    if (tableData.type == eFishType.Fish) fishQuantity--;
+                    if (tableData.type == eFishType.Trash) trashQuantity--;
+                    if (tableData.type == eFishType.Bomb) bombQuantity--;
+                    break;
+                }
+            }
+
+            tableData.time = time;
+            time += Random.Range(0.5f, 1f);
+            tableList.Add(tableData);
+
+        }
+
+    }
     // 魚の移動終了位置を返す
     public static Vector3 GetFishMoveEndPos()
     {
@@ -120,68 +198,17 @@ public class FishManager : MonoBehaviour
     /// </summary>
     private void FishSpawner(LaneData lane)
     {
-        if (lane.nextTime <= 0f)
-        {
-            GameObject prefab = null;
-
-            // ランダムで漂流物を生成する
-            int rand = Random.Range(0, 100);
-            // 70%かつfishQuantityが1以上なら魚
-            if (rand < 70 && lane.fishQuantity > 0)
-            {
-                prefab = m_fishPrefabs[Random.Range(0, m_fishPrefabs.Count)];
-                lane.fishQuantity--;
-                Debug.Log(lane.fishQuantity);
-            }
-            // 20%でゴミ
-            else if (rand < 20) prefab = m_trashPrefabs[Random.Range(0, m_trashPrefabs.Count)];
-            // 10%で爆弾
-            else prefab = m_bombPrefabs[Random.Range(0, m_bombPrefabs.Count)];
-
-            // 漂流物のプレハブをオブジェクト化
-            GameObject obj = Instantiate(prefab);
-
-            // 生成した漂流物の高さをレーンに合わせる
-            var pos = obj.transform.position;
-            pos.y = lane.laneTf.position.y;
-            obj.transform.position = pos;
-
-            // 生成したFishクラスを各レーンのリストに追加
-            Fish fish = obj.GetComponent<Fish>();
-            lane.fishes.Add(fish);
-
-            // 次に生成する時間をランダムで設定
-            lane.nextTime += Random.Range(3f, 5f);
-        }
-        else
-        {
-            lane.nextTime -= Time.deltaTime;
-        }
+        //lane.fishes=
     }
-    
-    /// <summary>
-    /// 全てのレーンの魚の残量を監視
-    /// </summary>
-    /// <returns>全てのレーンで1つも魚がなければtrue 全てのレーンで1つでも魚が1以上あればfalse</returns>
-    private bool IsNotEnptyFishQuantity()
-    {
-        bool isEnptyFish = true;
-        for (int i = 0; i < LANE_COUNT; i++)
-        {
-            if (m_laneData[i].fishQuantity > 0)
-            {
-                isEnptyFish = false;
-            }
-        }
-        return isEnptyFish;
-    }
+
+
     /// <summary>
     /// 入力の受け付けとFishとの判定
     /// まだ未完成
     /// </summary>
     void Hoge(int i)
     {
-        //if (Input.GetKeyDown(GetKeyBind(i)))
+        if (Input.GetKeyDown(GetKeyBind(i)))
         {
             float Min = float.MaxValue;
             Fish result = null;
@@ -204,31 +231,78 @@ public class FishManager : MonoBehaviour
     }
     private void RemoveFish(int i)
     {
-        List<Fish> fishList = m_laneData[i].fishes;
-        if (fishList.Count <= 0) return;
-        foreach (Fish fish in fishList)
-        {
-            if (fish.IsIgnore())
-            {
-                m_laneData[i].fishes.Remove(fish);
-            }
+        //List<Fish> fishList = m_laneData[i].fishes;
+        //if (fishList.Count <= 0) return;
+        //foreach (Fish fish in fishList)
+        //{
+        //    if (fish.IsIgnore())
+        //    {
+        //        m_laneData[i].fishes.Remove(fish);
+        //    }
 
-            if (fishList.Count >= 0) break;
+        //    if (fishList.Count >= 0) break;
+        //}
+
+        m_laneData[i].fishes.RemoveAt(0);
+    }
+
+    private Fish SpawnFish(eFishType fishType , int index)
+    {
+        GameObject prefab = null;
+
+        switch (fishType)
+        {
+            case eFishType.Fish:
+                prefab = m_fishPrefabs[Random.Range(0, m_fishPrefabs.Count)];
+                break;
+            case eFishType.Trash:
+                prefab = m_trashPrefabs[Random.Range(0, m_trashPrefabs.Count)];
+                break;
+            case eFishType.Bomb:
+                prefab = m_bombPrefabs[Random.Range(0, m_bombPrefabs.Count)];
+                break;
         }
+
+        // 漂流物のプレハブをオブジェクト化
+        GameObject obj = Instantiate(prefab);
+
+        // 生成した漂流物の高さをレーンに合わせる
+        var pos = obj.transform.position;
+        pos.y = LaneManager.instance.GetLanePosY(index);
+        obj.transform.position = pos;
+
+        // 生成したFishクラスを各レーンのリストに追加
+        Fish fish = obj.GetComponent<Fish>();
+
+        return fish;
     }
     private void Update()
     {
+        if (!m_isStart) return;
+
+        m_gameTime += Time.deltaTime;
+
         for (int i = 0; i < LANE_COUNT; i++)
         {
             var lane = m_laneData[i];
+            if (lane.tableList.Count <= 0) continue;
+
+            if (lane.tableList[0].time <= m_gameTime)
+            {
+                Fish fish = SpawnFish(lane.tableList[0].type, i);
+
+                lane.fishes.Add(fish);
+
+                lane.tableList.RemoveAt(0);
+            }
 
             // ランダムで漂流物を生成するテスト処理（削除予定）
             //UpdateRandomTest(lane);
 
-            FishSpawner(lane);
+            //FishSpawner(lane);
 
-            RemoveFish(i);
-            Hoge(i);
+            //RemoveFish(i);
+            //Hoge(i);
         }
     }
 }
