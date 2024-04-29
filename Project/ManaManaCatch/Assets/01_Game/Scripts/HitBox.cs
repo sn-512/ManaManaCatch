@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HitBox : MonoBehaviour
 {
-    [SerializeField] private float m_raycastLength = 1;
+    private float m_raycastLength = 1;
     private SpriteRenderer m_spriteRenderer = null;
     private Transform m_tf = null;
     private LayerMask m_layerMask;
@@ -20,7 +20,7 @@ public class HitBox : MonoBehaviour
     void Update()
     {
 
-        
+
     }
 
 }
