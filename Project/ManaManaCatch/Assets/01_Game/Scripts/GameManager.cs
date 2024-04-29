@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class GameManager : MonoBehaviour
         Player2,
         Player3,
         Player4,
+    }
+
+    private void Awake()
+    {
+        SceneManager.LoadScene("Field", LoadSceneMode.Additive);
     }
 
     // Start is called before the first frame update
