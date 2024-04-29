@@ -158,6 +158,7 @@ public class FishManager : MonoBehaviour
             lane.nextTime -= Time.deltaTime;
         }
     }
+    
     /// <summary>
     /// ‘S‚Ä‚ÌƒŒ[ƒ“‚Ì‹›‚Ìc—Ê‚ğŠÄ‹
     /// </summary>

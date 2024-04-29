@@ -8,14 +8,16 @@ public class Fish : MonoBehaviour
     /// <summary>
     /// タイミングとの差が＋ーinterval秒なら成功
     /// </summary>
-    [SerializeField] private float m_interval = 0.3f;
+    [SerializeField] private float m_interval = 0.5f;
 
     [SerializeField] private float m_elapsedTime = 0f;
 
     private Transform m_tf = null;
     private Vector3 m_startPos = Vector3.zero;
     private Vector3 m_endPos = Vector3.zero;
-    private float m_canScoopTime = 0.5f;
+    private float m_canScoopTime = 1f;
+
+    private SpriteRenderer spriteRenderer;
     // Start is called before the first frame update
     void Awake()
     {
@@ -23,6 +25,8 @@ public class Fish : MonoBehaviour
         m_startPos = m_tf.position;
         m_endPos = FishManager.GetFishMoveEndPos();
         m_interval = 0.1f;
+
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -42,12 +46,17 @@ public class Fish : MonoBehaviour
             }
         }
 
-        if (!CanScoop())
+        if (CanScoop())
         {
+            spriteRenderer.color = Color.red;
             if (EvaluateTiming())
             {
-                Debug.Log("A");
+                spriteRenderer.color = Color.yellow;
             }
+            //if (EvaluateTiming())
+            //{
+            //    Debug.Log("A");
+            //}
         }
 
 
@@ -71,7 +80,7 @@ public class Fish : MonoBehaviour
     /// <returns>経過時間とタイミングの差がm_interval以内であればtrue</returns>
     public bool EvaluateTiming()
     {
-        return Mathf.Abs(DiffElapsedTimeAndTiming()) <= m_interval;
+        return Mathf.Abs(m_elapsedTime - m_timing) <= m_interval;
     }
     /// <summary>
     /// タイミングの評価を行うか判定する
@@ -79,7 +88,7 @@ public class Fish : MonoBehaviour
     /// <returns>経過時間とタイミングの差がm_canScoopTime以内であればtrue</returns>
     public bool CanScoop()
     {
-        return Mathf.Abs(DiffElapsedTimeAndTiming()) <= m_canScoopTime;
+        return Mathf.Abs(m_elapsedTime - m_timing) <= m_canScoopTime;
     }
     /// <summary>
     /// 無視する(削除フラグとして使用)
@@ -87,7 +96,7 @@ public class Fish : MonoBehaviour
     /// <returns>経過時間+判定間隔がタイミングを超えるとtrue</returns>
     public bool IsIgnore()
     {
-        return (m_elapsedTime + m_interval) >= m_timing;
+        return (m_elapsedTime - m_interval) >= m_timing;
     }
     /// <summary>
     ///　タイミングとの差
